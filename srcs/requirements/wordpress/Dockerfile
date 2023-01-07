@@ -1,8 +1,6 @@
 FROM alpine:3.17
-ARG PHP_VERSION=81 \
-    DB_NAME \
-    DB_USER \
-    DB_PASS
+ARG PHP_VERSION=81  DB_NAME DB_USER DB_PASS
+
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
