@@ -1,21 +1,12 @@
 #!bin/sh
 
-if [ ! -d "/var/lib/mysql/wordpress" ]; then
-
-        cat << EOF > /tmp/create_db.sql
-USE mysql;
-FLUSH PRIVILEGES;
-DELETE FROM     mysql.user WHERE User='';
-DROP DATABASE test;
-DELETE FROM mysql.db WHERE Db='test';
-DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${Data_Root}';
-CREATE DATABASE ${Data_name} CHARACTER SET utf8 COLLATE utf8_general_ci;
-CREATE USER '${Data_User}'@'%' IDENTIFIED by '${Data_pass}';
-GRANT ALL PRIVILEGES ON wordpress.* TO '${Data_User}'@'%';
-FLUSH PRIVILEGES;
-EOF
-        # run init.sql
-        /usr/bin/mysqld --user=mysql --bootstrap < /tmp/create_db.sql
-        rm -f /tmp/create_db.sql
+if [ ! -d /var/lib/mysql/$Data_name ] ; then 
+    service mysql start
+    mysql -u root -e "CREATE DATABASE IF NOT EXISTS $Data_name"
+    mysql -u root -e "CREATE USER '$Data_User'@'%' IDENTIFIED BY '$Data_pass'"
+    mysql -u root -e "GRANT ALL PRIVILEGES ON $Data_name.* TO '$Data_User'@'%'"
+    mysql -u root -e "FLUSH PRIVILEGES"
+    mysql -u root -e "ALTER USER '$Data_RootT'@'localhost' IDENTIFIED BY '$Data_pass'"
+    mysql -u root -e "FLUSH PRIVILEGES"
+    kill `cat /var/run/mysqld/mysqld.pid`
 fi
