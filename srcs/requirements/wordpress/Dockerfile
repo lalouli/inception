@@ -1,5 +1,5 @@
 FROM alpine:3.17
-ARG PHP_VERSION=81  DB_NAME DB_USER DB_PASS
+ARG PHP_VERSION=81  Data_name Data_User Data_pass
 
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \

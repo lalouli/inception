@@ -1,6 +1,6 @@
 FROM alpine:3.17
 
-ARG DB_NAME DB_USER DB_PASS
+ARG Data_name Data_User Data_pass
 
 RUN apk update && apk add --no-cache mariadb mariadb-client
 
@@ -14,7 +14,7 @@ RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 EXPOSE 3306
 
-COPY requirements/mariadb/conf/create_db.sh .
-RUN sh create_db.sh && rm create_db.sh
+COPY requirements/mariadb/conf/db_script.sh .
+RUN sh db_script.sh && rm db_script.sh
 USER mysql
 CMD ["/usr/bin/mysqld", "--skip-log-error"]
